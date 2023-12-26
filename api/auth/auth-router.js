@@ -39,7 +39,7 @@ router.post(
   checkUsernameFree,
   (req, res, next) => {
     const { username, password } = req.body;
-    const hash = bcrypt.hashSync(password, 8);
+    const hash = bcrypt.hashSync(password, 10);
 
     User.add({ username, password: hash })
       .then((saved) => {
@@ -69,7 +69,7 @@ router.post("/login", checkUsernameExists, (req, res, next) => {
   if (bcrypt.compareSync(password, req.user.password)) {
     // make it so the cookie is set on the client
     // make it so server stores a session with a session id
-    req.session.user;
+    req.session.user = req.user;
     res.json({ message: `welcome ${req.user.username}!` });
   } else {
     next({ status: 401, message: "Invalid credentials" });
